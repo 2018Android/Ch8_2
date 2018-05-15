@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button btn_single = (Button)findViewById(R.id.btn_single);
         btn_single.setOnClickListener(btn_single_Click);
+
+        Button btn_multi = (Button)findViewById(R.id.btn_multi);
+        btn_multi.setOnClickListener(btn_multi_Click);
     }
 
     DialogInterface.OnClickListener dialog_listener = new DialogInterface.OnClickListener(){
@@ -108,5 +112,51 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         }
     };
+
+    String[] multiItems = {"Samsung" , "HTC" , "Apple" , "ASUS"};
+    boolean[] multiItemsChecked = new boolean[multiItems.length];
+    DialogInterface.OnClickListener btn_multi_P_Click = new DialogInterface.OnClickListener(){
+        public void onClick(DialogInterface dialogInterface, int i){
+            String msg="";
+            for (int index=0; index<multiItems.length; index++){
+                if(multiItemsChecked[index]){
+                    msg+= multiItems[index]+"\n";
+                }
+            }
+            TextView txv_output = (TextView)findViewById(R.id.txv_output);
+            txv_output.setText(msg);
+
+        }
+    };
+
+    DialogInterface.OnClickListener btn_multi_N_Click = new DialogInterface.OnClickListener(){
+        public void onClick(DialogInterface dialogInterface, int i){
+
+        }
+    };
+
+    DialogInterface.OnMultiChoiceClickListener MultiChoiceListener = new DialogInterface.OnMultiChoiceClickListener(){
+        public void onClick(DialogInterface dialogInterface, int which, boolean isChecked){
+            Toast.makeText(
+                    MainActivity.this
+                    ,multiItemsChecked[which]+(isChecked? "勾選":"沒有勾選" )
+                    ,Toast.LENGTH_SHORT
+            ).show();
+        }
+    };
+
+    View.OnClickListener btn_multi_Click = new View.OnClickListener(){
+        public void onClick(View v){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("請勾選項目:")
+                    .setPositiveButton("確定", btn_multi_P_Click)
+                    .setNegativeButton("取消", btn_multi_N_Click)
+                    .setMultiChoiceItems(multiItems, multiItemsChecked, MultiChoiceListener)
+                    .create()
+                    .show();
+        }
+    };
+
+
 
 }
